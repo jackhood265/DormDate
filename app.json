@@ -17,14 +17,17 @@
       "bundleIdentifier": "com.jackhood.DormDate",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "googleServicesFile": "./ios/GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "googleServicesFile": "./android/app/google-services.json",
+      "package": "com.jackhood.DormDate"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,6 +36,17 @@
       "eas": {
         "projectId": "66223767-44b0-4693-ad52-354579e5f74f"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+    "owner": "jackhood"
   }
 }
