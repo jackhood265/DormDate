@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "741292322358",
+    "project_id": "dormdate-14a3b",
+    "storage_bucket": "dormdate-14a3b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741292322358:android:72e10a33ff559011c27297",
+        "android_client_info": {
+          "package_name": "com.jackhood.DormDate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB25q99cvufzAvCvE7voDTH6y-LpCSjiNo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
