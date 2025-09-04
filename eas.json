@@ -1,0 +1,19 @@
+{
+  "build": {
+    "production": {
+      "env": {
+        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
+      },
+      "prebuildCommand": "echo 'Hello from prebuildCommand!'" 
+    },
+    "development": {
+      "env": {
+        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
+      },
+      "prebuildCommand": "echo 'Hello from prebuildCommand!'" 
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
