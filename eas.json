@@ -4,13 +4,19 @@
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
-      "prebuildCommand": "echo 'Hello from prebuildCommand!'" 
+      "prebuildCommand": "node ./scripts/write-google-plist.js",
+      "cli": {
+        "appVersionSource": "app.json"
+      }
     },
     "development": {
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
-      "prebuildCommand": "echo 'Hello from prebuildCommand!'" 
+      "prebuildCommand": "node ./scripts/write-google-plist.js",
+      "cli": {
+        "appVersionSource": "app.json"
+      }
     }
   },
   "submit": {
