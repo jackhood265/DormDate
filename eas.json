@@ -1,22 +1,19 @@
 {
+  "cli": {
+    "appVersionSource": "app.json"
+  },
   "build": {
     "production": {
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
-      "prebuildCommand": "node ./scripts/write-google-plist.js",
-      "cli": {
-        "appVersionSource": "app.json"
-      }
+      "prebuildCommand": "node ./scripts/write-google-plist.js"
     },
     "development": {
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
-      "prebuildCommand": "node ./scripts/write-google-plist.js",
-      "cli": {
-        "appVersionSource": "app.json"
-      }
+      "prebuildCommand": "node ./scripts/write-google-plist.js"
     }
   },
   "submit": {
