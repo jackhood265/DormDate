@@ -1,5 +1,4 @@
 {
-{
   "build": {
     "production": {
       "env": {
