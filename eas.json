@@ -1,4 +1,7 @@
 {
+  "cli": {
+    "appVersionSource": "app.json"
+  },
   "build": {
     "production": {
       "env": {
@@ -11,7 +14,7 @@
         "simulator": false
       },
       "channel": "production",
-      "hook": {
+      "hooks": {
         "pre-install": "./prebuild-ios.sh"
       }
     },
@@ -26,7 +29,7 @@
         "simulator": false
       },
       "channel": "development",
-      "hook": {
+      "hooks": {
         "pre-install": "./prebuild-ios.sh"
       }
     }
@@ -35,3 +38,4 @@
     "production": {}
   }
 }
+
