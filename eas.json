@@ -1,12 +1,17 @@
 {
-  "cli": {
-    "appVersionSource": "app.json"
-  },
+{
   "build": {
     "production": {
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
+      "resourceClass": "m-medium",
+      "autoIncrement": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
+      "channel": "production",
       "hook": {
         "pre-install": "./prebuild-ios.sh"
       }
@@ -15,6 +20,13 @@
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
+      "resourceClass": "m-medium",
+      "autoIncrement": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
+      "channel": "development",
       "hook": {
         "pre-install": "./prebuild-ios.sh"
       }
