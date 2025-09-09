@@ -1,19 +1,23 @@
 {
   "cli": {
-    "appVersionSource": "local"
+    "appVersionSource": "app.json"
   },
   "build": {
     "production": {
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
-      "prebuildCommand": "node ./scripts/write-google-plist.js"
+      "hook": {
+        "pre-install": "./prebuild-ios.sh"
+      }
     },
     "development": {
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
-      "prebuildCommand": "node ./scripts/write-google-plist.js"
+      "hook": {
+        "pre-install": "./prebuild-ios.sh"
+      }
     }
   },
   "submit": {
