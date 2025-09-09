@@ -1,31 +1,16 @@
 {
-  "cli": {
-    "appVersionSource": "remote"
-  },
   "build": {
     "production": {
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
-      "resourceClass": "medium",
-      "autoIncrement": true,
-      "distribution": "internal",
-      "ios": {
-        "simulator": false
-      },
-      "channel": "production"
+      "prebuildCommand": "node ./scripts/write-google-plist.js"
     },
     "development": {
       "env": {
         "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
-      "resourceClass": "medium",
-      "autoIncrement": true,
-      "distribution": "internal",
-      "ios": {
-        "simulator": false
-      },
-      "channel": "development"
+      "prebuildCommand": "node ./scripts/write-google-plist.js"
     }
   },
   "submit": {
