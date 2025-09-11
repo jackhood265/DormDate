@@ -5,8 +5,7 @@
   "build": {
     "production": {
       "env": {
-        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST",
-        "EXPO_USE_LOCAL_CLI": "1"
+        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
       "resourceClass": "medium",
       "autoIncrement": true,
@@ -15,32 +14,13 @@
         "simulator": false
       },
       "channel": "production",
-      "prebuildCommand": "node ./scripts/write-google-plist.js",
-      "cache": {
-        "disabled": true
-      }
-    },
-    "staging": {
-      "env": {
-        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST",
-        "EXPO_USE_LOCAL_CLI": "1"
-      },
-      "resourceClass": "medium",
-      "autoIncrement": true,
-      "distribution": "internal",
-      "ios": {
-        "simulator": false
-      },
-      "channel": "staging",
-      "prebuildCommand": "node ./scripts/write-google-plist.js",
       "cache": {
         "disabled": true
       }
     },
     "development": {
       "env": {
-        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST",
-        "EXPO_USE_LOCAL_CLI": "1"
+        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST"
       },
       "resourceClass": "medium",
       "autoIncrement": true,
@@ -49,14 +29,31 @@
         "simulator": true
       },
       "channel": "development",
-      "prebuildCommand": "node ./scripts/write-google-plist.js",
       "cache": {
         "disabled": true
-      },
-      "developmentClient": true
+      }
+    },
+    "staging": {
+      "distribution": "internal",
+      "channel": "staging",
+      "resourceClass": "medium",
+      "autoIncrement": true,
+      "ios": {
+        "simulator": false
+      }
+    },
+    "internal": {
+      "distribution": "internal",
+      "channel": "internal",
+      "resourceClass": "medium",
+      "autoIncrement": true,
+      "ios": {
+        "simulator": false
+      }
     }
   },
   "submit": {
     "production": {}
   }
 }
+
