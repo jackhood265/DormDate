@@ -1,33 +1,34 @@
 // metro.config.js
-const { getDefaultConfig } = require('expo/metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
+const { getDefaultConfig } = require("@expo/metro-config");
 
-module.exports = (() => {
-  const config = getDefaultConfig(__dirname);
+// Use Metro's built-in resolver for the actual work
+const defaultResolve = require("metro-resolver").resolve;
 
-  // Make 100% sure Metro never crawls your build/tools scripts
-  config.resolver.blockList = exclusionList([
-    /.*\/scripts\/.*/,         // block scripts folder
-    /.*\/build\/.*/,           // block build artifacts
-  ]);
+// A tiny wrapper that logs interesting resolutions.
+function verboseResolveRequest(context, moduleName, platform) {
+  const from = context.originModulePath || "<root>";
 
-  // Log every resolve; flag anything suspicious
-  const prev = config.resolver.resolveRequest;
-  config.resolver.resolveRequest = (context, moduleName, platform) => {
-    if (!moduleName || typeof moduleName !== 'string') {
-      console.warn('⚠️ resolveRequest got bad moduleName:', moduleName, 'from', context.originModulePath);
-    } else if (/^\.{0,2}\/?$/.test(moduleName)) {
-      console.warn('⚠️ resolveRequest got empty-ish path:', JSON.stringify(moduleName), 'from', context.originModulePath);
-    } else if (/\/$/.test(moduleName)) {
-      console.warn('⚠️ Trailing slash import:', JSON.stringify(moduleName), 'from', context.originModulePath);
-    }
-    try {
-      return (prev ?? context.resolveRequest)(context, moduleName, platform);
-    } catch (e) {
-      console.warn('❌ Failed to resolve', JSON.stringify(moduleName), 'from', context.originModulePath);
-      throw e;
-    }
-  };
+  // Log only the most relevant traffic so logs stay readable
+  const shouldLog =
+    from.endsWith("/index.js") ||
+    moduleName === "./App" ||
+    moduleName.endsWith("index.js") ||
+    moduleName.includes("sentinel.entry");
 
+  if (shouldLog) {
+    console.log(
+      `[METRO-RESOLVE] platform=${platform} from=${from} -> ${moduleName}`
+    );
+  }
+
+  // Defer to the default resolver
+  return defaultResolve(context, moduleName, platform);
+}
+
+module.exports = (projectRoot) => {
+  const config = getDefaultConfig(projectRoot);
+  // Attach our wrapper
+  config.resolver = config.resolver || {};
+  config.resolver.resolveRequest = verboseResolveRequest;
   return config;
-})();
+};
