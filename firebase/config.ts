@@ -1,1 +1,19 @@
-// firebase/config.tsimport { initializeApp, getApps, getApp } from "firebase/app";import { getAuth } from "firebase/auth";import { getFirestore } from "firebase/firestore"; // ✅ single slashconst firebaseConfig = {  apiKey: "AIzaSyBmed-XNnB88BWOodO9s1Vkh5qVRGo5V5E",  authDomain: "dormdate-14a3b.firebaseapp.com",  projectId: "dormdate-14a3b",  storageBucket: "dormdate-14a3b.appspot.com",  messagingSenderId: "741292322358",  appId: "1:741292322358:ios:8549a46f6208a62bc27297",  measurementId: "G-48YEC4WDRH",};const app = getApps().length ? getApp() : initializeApp(firebaseConfig);export const auth = getAuth(app);export const db = getFirestore(app);
+// firebase/config.ts
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // ✅ single slash
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBmed-XNnB88BWOodO9s1Vkh5qVRGo5V5E",
+  authDomain: "dormdate-14a3b.firebaseapp.com",
+  projectId: "dormdate-14a3b",
+  storageBucket: "dormdate-14a3b.appspot.com",
+  messagingSenderId: "741292322358",
+  appId: "1:741292322358:ios:8549a46f6208a62bc27297",
+  measurementId: "G-48YEC4WDRH",
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
