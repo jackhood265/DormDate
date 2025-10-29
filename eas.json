@@ -5,7 +5,8 @@
     "build":  {
                   "production":  {
                                      "env":  {
-                                                 "GOOGLE_SERVICE_PLIST":  "@GOOGLE_SERVICE_PLIST"
+                                                 "GOOGLE_SERVICE_PLIST":  "@GOOGLE_SERVICE_PLIST",
+                                                 "EXPO_ENTRY_FILE":  "index.js"
                                              },
                                      "resourceClass":  "medium",
                                      "autoIncrement":  true,
@@ -20,7 +21,8 @@
                                  },
                   "development":  {
                                       "env":  {
-                                                  "GOOGLE_SERVICE_PLIST":  "@GOOGLE_SERVICE_PLIST"
+                                                  "GOOGLE_SERVICE_PLIST":  "@GOOGLE_SERVICE_PLIST",
+                                                  "EXPO_ENTRY_FILE":  "index.js"
                                               },
                                       "resourceClass":  "medium",
                                       "autoIncrement":  true,
