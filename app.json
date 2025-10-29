@@ -1,5 +1,6 @@
 {
   "expo": {
+    "jsEngine": "jsc",
     "name": "DormDate",
     "slug": "DormDate",
     "version": "1.0.0",
@@ -27,7 +28,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "googleServicesFile": "./android/app/google-services.json",
+      "googleServicesFile": "./google-services.json",
       "package": "com.jackhood.DormDate"
     },
     "web": {
@@ -38,22 +39,14 @@
         "projectId": "66223767-44b0-4693-ad52-354579e5f74f"
       }
     },
-    "plugins": [
-      [
-        "expo-build-properties",
-        {
-          "ios": {
-            "useFrameworks": "static"
-          }
-        }
-      ]
-    ],
     "owner": "jackhood",
     "updates": {
       "url": "https://u.expo.dev/66223767-44b0-4693-ad52-354579e5f74f"
-    }
+    },
+    "plugins": [
+      ["expo-updates", { "enabled": false }]
+    ]
   }
 }
-
 
 
