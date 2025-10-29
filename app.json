@@ -1,52 +1,56 @@
 {
-  "expo": {
-    "jsEngine": "jsc",
-    "name": "DormDate",
-    "slug": "DormDate",
-    "version": "1.0.0",
-    "runtimeVersion": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": false,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.jackhood.DormDate",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      },
-      "googleServicesFile": "./ios/GoogleService-Info.plist"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true,
-      "googleServicesFile": "./google-services.json",
-      "package": "com.jackhood.DormDate"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "66223767-44b0-4693-ad52-354579e5f74f"
-      }
-    },
-    "owner": "jackhood",
-    "updates": {
-      "url": "https://u.expo.dev/66223767-44b0-4693-ad52-354579e5f74f"
-    },
-    "plugins": [
-      ["expo-updates", { "enabled": false }]
-    ]
-  }
+    "expo":  {
+                 "jsEngine":  "jsc",
+                 "name":  "DormDate",
+                 "slug":  "DormDate",
+                 "version":  "1.0.0",
+                 "runtimeVersion":  "1.0.0",
+                 "orientation":  "portrait",
+                 "icon":  "./assets/icon.png",
+                 "userInterfaceStyle":  "light",
+                 "newArchEnabled":  false,
+                 "splash":  {
+                                "image":  "./assets/splash-icon.png",
+                                "resizeMode":  "contain",
+                                "backgroundColor":  "#ffffff"
+                            },
+                 "ios":  {
+                             "supportsTablet":  true,
+                             "bundleIdentifier":  "com.jackhood.DormDate",
+                             "infoPlist":  {
+                                               "ITSAppUsesNonExemptEncryption":  false
+                                           },
+                             "googleServicesFile":  "./ios/GoogleService-Info.plist"
+                         },
+                 "android":  {
+                                 "adaptiveIcon":  {
+                                                      "foregroundImage":  "./assets/adaptive-icon.png",
+                                                      "backgroundColor":  "#ffffff"
+                                                  },
+                                 "edgeToEdgeEnabled":  true,
+                                 "googleServicesFile":  "./google-services.json",
+                                 "package":  "com.jackhood.DormDate"
+                             },
+                 "web":  {
+                             "favicon":  "./assets/favicon.png"
+                         },
+                 "extra":  {
+                               "eas":  {
+                                           "projectId":  "66223767-44b0-4693-ad52-354579e5f74f"
+                                       }
+                           },
+                 "owner":  "jackhood",
+                 "updates":  {
+                                 "url":  "https://u.expo.dev/66223767-44b0-4693-ad52-354579e5f74f"
+                             },
+                 "plugins":  [
+                                 [
+                                     "expo-updates",
+                                     {
+                                         "enabled":  false
+                                     }
+                                 ]
+                             ],
+                 "entryPoint":  "./index.js"
+             }
 }
-
-
