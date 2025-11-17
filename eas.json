@@ -1,68 +1,81 @@
 {
-    "cli":  {
-                "appVersionSource":  "remote"
-            },
-    "build":  {
-                  "production":  {
-                                     "env":  {
-                                                 "GOOGLE_SERVICE_PLIST":  "@GOOGLE_SERVICE_PLIST",
-                                                 "EXPO_ENTRY_FILE":  "index.js"
-                                             },
-                                     "resourceClass":  "medium",
-                                     "autoIncrement":  true,
-                                     "distribution":  "store",
-                                     "ios":  {
-                                                 "simulator":  false
-                                             },
-                                     "channel":  "production",
-                                     "cache":  {
-                                                   "disabled":  true
-                                               }
-                                 },
-                  "development":  {
-                                      "env":  {
-                                                  "GOOGLE_SERVICE_PLIST":  "@GOOGLE_SERVICE_PLIST",
-                                                  "EXPO_ENTRY_FILE":  "index.js"
-                                              },
-                                      "resourceClass":  "medium",
-                                      "autoIncrement":  true,
-                                      "distribution":  "internal",
-                                      "ios":  {
-                                                  "simulator":  true
-                                              },
-                                      "channel":  "development",
-                                      "cache":  {
-                                                    "disabled":  true
-                                                }
-                                  },
-                  "staging":  {
-                                  "distribution":  "internal",
-                                  "channel":  "staging",
-                                  "resourceClass":  "medium",
-                                  "autoIncrement":  true,
-                                  "ios":  {
-                                              "simulator":  false
-                                          },
-                                  "env":  {
-                                              "EXPO_ENTRY_FILE":  "index.js"
-                                          }
-                              },
-                  "internal":  {
-                                   "distribution":  "internal",
-                                   "channel":  "internal",
-                                   "resourceClass":  "medium",
-                                   "autoIncrement":  true,
-                                   "ios":  {
-                                               "simulator":  false
-                                           },
-                                   "env":  {
-                                               "EXPO_ENTRY_FILE":  "index.js"
-                                           }
-                               }
-              },
-    "submit":  {
-                   "production":  {
-
-                                  }
-               }
+  "cli": {
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "production": {
+      "env": {
+        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST",
+        "EXPO_ENTRY_FILE": "index.js"
+      },
+      "resourceClass": "medium",
+      "autoIncrement": true,
+      "distribution": "store",
+      "ios": {
+        "simulator": false
+      },
+      "channel": "production",
+      "cache": {
+        "disabled": true
+      }
+    },
+    "development": {
+      "env": {
+        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST",
+        "EXPO_ENTRY_FILE": "index.js"
+      },
+      "resourceClass": "medium",
+      "autoIncrement": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "channel": "development",
+      "cache": {
+        "disabled": true
+      }
+    },
+    "staging": {
+      "env": {
+        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST",
+        "EXPO_ENTRY_FILE": "index.js"
+      },
+      "resourceClass": "medium",
+      "autoIncrement": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
+      "channel": "staging"
+    },
+    "internal": {
+      "env": {
+        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST",
+        "EXPO_ENTRY_FILE": "index.js"
+      },
+      "resourceClass": "medium",
+      "autoIncrement": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
+      "channel": "internal"
+    },
+    "adhoc-release": {
+      "env": {
+        "GOOGLE_SERVICE_PLIST": "@GOOGLE_SERVICE_PLIST",
+        "EXPO_ENTRY_FILE": "index.js"
+      },
+      "resourceClass": "medium",
+      "autoIncrement": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
+      "channel": "adhoc-release"
+    }
+  },
+  "submit": {
+    "production": {}
+  }
 }
