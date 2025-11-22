@@ -1,22 +1,41 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+// screens/LoginScreen.tsx
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase/config";
+import { useNavigation } from "@react-navigation/native";
 
-export default function LoginScreen({ navigation }: any) {
+export default function LoginScreen() {
+  const navigation = useNavigation<any>();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // TODO: add Firebase Auth here later
-    navigation.replace("MainTabs"); // go to tabs after login
-  };
+  // Auto-login if already authenticated
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
+    });
+    return unsub;
+  }, []);
+
+  async function handleLogin() {
+    try {
+      await signInWithEmailAndPassword(auth, email.trim(), password);
+      navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
+    } catch (err: any) {
+      Alert.alert("Login Failed", err.message);
+    }
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>DormDate</Text>
+      <Text style={styles.title}>DormDate Login</Text>
 
       <TextInput
         placeholder="Email"
         style={styles.input}
+        autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
       />
@@ -29,30 +48,19 @@ export default function LoginScreen({ navigation }: any) {
         onChangeText={setPassword}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Log In</Text>
-      </TouchableOpacity>
+      <Button title="Login" onPress={handleLogin} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20 },
-  title: { fontSize: 32, fontWeight: "bold", marginBottom: 40 },
+  container: { flex: 1, justifyContent: "center", padding: 20 },
+  title: { fontSize: 24, textAlign: "center", marginBottom: 20 },
   input: {
-    width: "100%",
-    padding: 12,
-    backgroundColor: "#eee",
-    borderRadius: 10,
+    borderWidth: 1,
+    padding: 10,
     marginBottom: 15,
+    borderRadius: 5,
   },
-  button: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#3B82F6",
-    borderRadius: 10,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonText: { color: "white", fontSize: 16, fontWeight: "600" },
 });
+
