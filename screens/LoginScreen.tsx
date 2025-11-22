@@ -12,21 +12,12 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   // Auto-login if already authenticated
- useEffect(() => {
-  // Always start by signing out so old sessions don't auto-login
-  auth.signOut();
-
-  const unsub = onAuthStateChanged(auth, (user) => {
-    if (user) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "MainTabs" }],
-      });
-    }
-  });
-
-  return unsub;
-}, []);
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
+    });
+    return unsub;
+  }, []);
 
   async function handleLogin() {
     try {
