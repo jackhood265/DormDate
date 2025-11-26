@@ -1,9 +1,14 @@
 // screens/LoginScreen.tsx
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase/config";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  User,
+} from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
+import { auth, db } from "../firebase/config";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function LoginScreen() {
   const navigation = useNavigation<any>();
@@ -11,18 +16,68 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  async function handlePostLogin(user: User) {
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+
+      if (!snap.exists()) {
+        // First-time user doc
+        await setDoc(
+          userRef,
+          {
+            email: user.email ?? "",
+            createdAt: Date.now(),
+            onboardingComplete: false,
+          },
+          { merge: true }
+        );
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "OnboardingName" }],
+        });
+        return;
+      }
+
+      const data = snap.data() as any;
+      if (data?.onboardingComplete) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "MainTabs" }],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "OnboardingName" }],
+        });
+      }
+    } catch (err: any) {
+      console.log("handlePostLogin error", err);
+      Alert.alert(
+        "Error",
+        "There was a problem loading your profile. Please try again."
+      );
+    }
+  }
+
   // Auto-login if already authenticated
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      if (user) navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
+      if (user) {
+        handlePostLogin(user);
+      }
     });
     return unsub;
   }, []);
 
   async function handleLogin() {
     try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
-      navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
+      const cred = await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
+      await handlePostLogin(cred.user);
     } catch (err: any) {
       Alert.alert("Login Failed", err.message);
     }
@@ -36,6 +91,7 @@ export default function LoginScreen() {
         placeholder="Email"
         style={styles.input}
         autoCapitalize="none"
+        keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
       />
