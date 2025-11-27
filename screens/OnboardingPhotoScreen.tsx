@@ -1,8 +1,10 @@
-import React from "react";
-import { View, Text, Pressable, StyleSheet, Alert } from "react-native";
+import React, { useState } from "react";
+import { View, Text, Pressable, Image, StyleSheet, Alert } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
-import { auth, db } from "../firebase/config";
+import { auth, db, storage } from "../firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const COLORS = {
   background: "#ffffff",
@@ -14,6 +16,19 @@ const COLORS = {
 
 export default function OnboardingPhotoScreen() {
   const navigation = useNavigation<any>();
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  async function pickImage() {
+    const res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+    });
+
+    if (!res.canceled) {
+      setSelectedImage(res.assets[0].uri);
+    }
+  }
 
   async function handleFinish() {
     const user = auth.currentUser;
@@ -23,9 +38,31 @@ export default function OnboardingPhotoScreen() {
       return;
     }
 
+    let photoURL = null;
+
+    try {
+      setUploading(true);
+
+      // If user added a photo, upload it
+      if (selectedImage) {
+        const response = await fetch(selectedImage);
+        const blob = await response.blob();
+
+        const storageRef = ref(storage, `profilePhotos/${user.uid}.jpg`);
+        await uploadBytes(storageRef, blob);
+
+        photoURL = await getDownloadURL(storageRef);
+      }
+
+    } catch (err) {
+      console.log("Photo upload error:", err);
+      Alert.alert("Error", "Could not upload your photo.");
+    }
+
     try {
       const userRef = doc(db, "users", user.uid);
       await updateDoc(userRef, {
+        photoURL: photoURL ?? null,
         onboardingComplete: true,
         updatedAt: Date.now(),
       });
@@ -34,30 +71,46 @@ export default function OnboardingPhotoScreen() {
         index: 0,
         routes: [{ name: "MainTabs" }],
       });
-    } catch (err: any) {
+    } catch (err) {
       console.log("OnboardingPhoto error", err);
-      Alert.alert("Error", "Could not finish onboarding. Try again.");
+      Alert.alert("Error", "Could not finish onboarding.");
     }
+
+    setUploading(false);
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Add a profile photo</Text>
       <Text style={styles.subheading}>
-        Profiles with photos get way more attention. You can always add or
-        change your photos later.
+        Profiles with photos get way more attention.
       </Text>
 
-      {/* Placeholder card */}
-      <View style={styles.photoPlaceholder}>
-        <Text style={styles.photoPlaceholderText}>Photo upload coming soon</Text>
-      </View>
+      {selectedImage ? (
+        <Image source={{ uri: selectedImage }} style={styles.preview} />
+      ) : (
+        <View style={styles.photoPlaceholder}>
+          <Text style={styles.photoPlaceholderText}>No photo selected</Text>
+        </View>
+      )}
 
-      <Pressable style={styles.buttonPrimary} onPress={handleFinish}>
-        <Text style={styles.buttonPrimaryText}>Skip for now & Finish</Text>
+      <Pressable style={styles.uploadButton} onPress={pickImage}>
+        <Text style={styles.uploadButtonText}>
+          {selectedImage ? "Change Photo" : "Upload Photo"}
+        </Text>
       </Pressable>
 
-      {/* Later we can add a real "Upload photo" button here */}
+      <Pressable style={styles.buttonPrimary} onPress={handleFinish}>
+        <Text style={styles.buttonPrimaryText}>
+          {uploading ? "Finishing..." : "Finish"}
+        </Text>
+      </Pressable>
+
+      {!selectedImage && (
+        <Pressable style={styles.skipButton} onPress={handleFinish}>
+          <Text style={styles.skipButtonText}>Skip for now</Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -80,19 +133,37 @@ const styles = StyleSheet.create({
     color: COLORS.muted,
     marginBottom: 24,
   },
+  preview: {
+    width: "100%",
+    height: 260,
+    borderRadius: 20,
+    marginBottom: 16,
+  },
   photoPlaceholder: {
-    height: 180,
+    height: 260,
     borderRadius: 20,
     borderWidth: 1,
     borderStyle: "dashed",
     borderColor: COLORS.muted,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 24,
+    marginBottom: 16,
   },
   photoPlaceholderText: {
     color: COLORS.muted,
     fontSize: 14,
+  },
+  uploadButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  uploadButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
   buttonPrimary: {
     backgroundColor: COLORS.accent,
@@ -104,5 +175,13 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",
+  },
+  skipButton: {
+    marginTop: 12,
+    alignItems: "center",
+  },
+  skipButtonText: {
+    color: COLORS.muted,
+    fontSize: 14,
   },
 });

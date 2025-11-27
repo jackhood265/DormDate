@@ -1,8 +1,8 @@
 // firebase/config.ts
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore"; // ✅ single slash
-
+import { getFirestore } from "firebase/firestore"; 
+import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyBmed-XNnB88BWOodO9s1Vkh5qVRGo5V5E",
   authDomain: "dormdate-14a3b.firebaseapp.com",
@@ -15,5 +15,6 @@ const firebaseConfig = {
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
+export const storage = getStorage(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
