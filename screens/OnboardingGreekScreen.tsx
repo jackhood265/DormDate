@@ -42,7 +42,7 @@ export default function OnboardingGreekScreen() {
         greekStatus: selected,
         updatedAt: Date.now(),
       });
-      navigation.navigate("OnboardingPhoto");
+      navigation.navigate("OnboardingBio");
     } catch (err: any) {
       console.log("OnboardingGreek error", err);
       Alert.alert("Error", "Could not save your answer. Try again.");
