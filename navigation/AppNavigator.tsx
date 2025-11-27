@@ -12,6 +12,8 @@ import OnboardingNameScreen from "../screens/OnboardingNameScreen";
 import OnboardingGenderScreen from "../screens/OnboardingGenderScreen";
 import OnboardingClassYearScreen from "../screens/OnboardingClassYearScreen";
 import OnboardingGreekScreen from "../screens/OnboardingGreekScreen";
+import OnboardingLocationScreen from "../screens/OnboardingLocationScreen";
+import OnboardingBioScreen from "../screens/OnboardingBioScreen";
 import OnboardingPhotoScreen from "../screens/OnboardingPhotoScreen";
 
 const Stack = createNativeStackNavigator();
@@ -29,6 +31,8 @@ export default function AppNavigator() {
         <Stack.Screen name="OnboardingGender" component={OnboardingGenderScreen} />
         <Stack.Screen name="OnboardingClassYear" component={OnboardingClassYearScreen} />
         <Stack.Screen name="OnboardingGreek" component={OnboardingGreekScreen} />
+        <Stack.Screen name="OnboardingLocation" component={OnboardingLocationScreen} />
+        <Stack.Screen name="OnboardingBio" component={OnboardingBioScreen} />
         <Stack.Screen name="OnboardingPhoto" component={OnboardingPhotoScreen} />
 
         {/* Main App */}
