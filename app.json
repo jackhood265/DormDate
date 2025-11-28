@@ -22,7 +22,7 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "DormDate uses your location to show nearby Auburn students.",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./ios/GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
