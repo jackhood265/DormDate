@@ -1,8 +1,21 @@
 // screens/HomeScreen.tsx
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import { auth, db } from "../firebase/config";
-import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
+import SwipeableReels from "../components/SwipeableReels";
+import BioModal from "../components/BioModal";
+import MatchModal from "../components/MatchModal";
 
 const COLORS = {
   background: "#ffffff",
@@ -12,15 +25,29 @@ const COLORS = {
   muted: "#6b7280",
 };
 
+interface Profile {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  photoURL?: string | null;
+  classYear?: string;
+  greekStatus?: string;
+  location?: { city: string; state: string };
+  bio?: string;
+}
+
 export default function HomeScreen() {
-  const [profiles, setProfiles] = useState<any[]>([]);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [bioModalVisible, setBioModalVisible] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
+  const [matchModalVisible, setMatchModalVisible] = useState(false);
+  const [matchedProfile, setMatchedProfile] = useState<Profile | null>(null);
 
   async function loadProfiles() {
     try {
       const user = auth.currentUser;
 
-      // 🔒 TS-safe: we null-check *inside* this function
       if (!user) {
         console.log("No user logged in — skipping profile load.");
         setProfiles([]);
@@ -28,7 +55,7 @@ export default function HomeScreen() {
         return;
       }
 
-      // Get current user's document (if you need it later)
+      // Get current user's swipes to filter already-seen profiles
       const currentUserDocRef = doc(db, "users", user.uid);
       const currentUserSnap = await getDoc(currentUserDocRef);
 
@@ -40,7 +67,9 @@ export default function HomeScreen() {
       }
 
       const currentUserData = currentUserSnap.data();
-      // You can use currentUserData later for filters if you want
+      const likedIds = currentUserData?.likes || [];
+      const passedIds = currentUserData?.passes || [];
+      const seenIds = [...likedIds, ...passedIds];
 
       // Query: Only Auburn students (classYear exists)
       const usersRef = collection(db, "users");
@@ -48,10 +77,11 @@ export default function HomeScreen() {
 
       const snap = await getDocs(q);
 
-      const results: any[] = [];
+      const results: Profile[] = [];
       snap.forEach((d) => {
-        if (d.id !== user.uid) {
-          results.push({ id: d.id, ...d.data() });
+        // Filter out current user and already-seen profiles
+        if (d.id !== user.uid && !seenIds.includes(d.id)) {
+          results.push({ id: d.id, ...d.data() } as Profile);
         }
       });
 
@@ -67,6 +97,127 @@ export default function HomeScreen() {
   useEffect(() => {
     loadProfiles();
   }, []);
+
+  async function handleLike(profileId: string) {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      // Initialize likes array if it doesn't exist
+      if (!userSnap.exists()) {
+        await setDoc(userRef, { likes: [profileId] }, { merge: true });
+      } else {
+        await updateDoc(userRef, {
+          likes: arrayUnion(profileId),
+        });
+      }
+
+      // Check for mutual match
+      await checkForMatch(profileId);
+    } catch (err) {
+      console.log("Error saving like:", err);
+      Alert.alert("Error", "Could not save your like. Please try again.");
+    }
+  }
+
+  async function handlePass(profileId: string) {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      // Initialize passes array if it doesn't exist
+      if (!userSnap.exists()) {
+        await setDoc(userRef, { passes: [profileId] }, { merge: true });
+      } else {
+        await updateDoc(userRef, {
+          passes: arrayUnion(profileId),
+        });
+      }
+    } catch (err) {
+      console.log("Error saving pass:", err);
+    }
+  }
+
+  async function checkForMatch(likedUserId: string) {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      // Check if the other user has liked us back
+      const likedUserRef = doc(db, "users", likedUserId);
+      const likedUserSnap = await getDoc(likedUserRef);
+
+      if (likedUserSnap.exists()) {
+        const likedUserData = likedUserSnap.data();
+        const theirLikes = likedUserData?.likes || [];
+
+        // If they liked us too, it's a match!
+        if (theirLikes.includes(user.uid)) {
+          // Save match for both users
+          const currentUserRef = doc(db, "users", user.uid);
+          await updateDoc(currentUserRef, {
+            matches: arrayUnion(likedUserId),
+          });
+
+          await updateDoc(likedUserRef, {
+            matches: arrayUnion(user.uid),
+          });
+
+          // Show match modal
+          const matchProfile = profiles.find((p) => p.id === likedUserId);
+          if (matchProfile) {
+            setMatchedProfile(matchProfile);
+            setMatchModalVisible(true);
+          }
+        }
+      }
+    } catch (err) {
+      console.log("Error checking for match:", err);
+    }
+  }
+
+  function handleShowBio(profile: Profile) {
+    setSelectedProfile(profile);
+    setBioModalVisible(true);
+  }
+
+  function handleBioLike() {
+    if (selectedProfile) {
+      handleLike(selectedProfile.id);
+      setBioModalVisible(false);
+      setSelectedProfile(null);
+    }
+  }
+
+  function handleBioPass() {
+    if (selectedProfile) {
+      handlePass(selectedProfile.id);
+      setBioModalVisible(false);
+      setSelectedProfile(null);
+    }
+  }
+
+  function handleKeepSwiping() {
+    setMatchModalVisible(false);
+    setMatchedProfile(null);
+  }
+
+  function handleSendMessage() {
+    setMatchModalVisible(false);
+    // TODO: Navigate to chat screen with matched user
+    Alert.alert("Feature Coming Soon", "Messaging will be available soon!");
+  }
+
+  function handleEndOfProfiles() {
+    // User has seen all profiles
+    setProfiles([]);
+  }
 
   if (loading) {
     return (
@@ -89,20 +240,29 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Potential Matches</Text>
+    <View style={styles.reelsContainer}>
+      <SwipeableReels
+        profiles={profiles}
+        onLike={handleLike}
+        onPass={handlePass}
+        onShowBio={handleShowBio}
+        onEnd={handleEndOfProfiles}
+      />
 
-      {profiles.map((p) => (
-        <View key={p.id} style={styles.profileCard}>
-          <Text style={styles.profileName}>{p.firstName || "Unknown"}</Text>
-          <Text style={styles.profileDetail}>
-            {p.classYear || "Class year unknown"}
-          </Text>
-          <Text style={styles.profileDetail}>
-            {p.greekStatus || "Greek life: N/A"}
-          </Text>
-        </View>
-      ))}
+      <BioModal
+        visible={bioModalVisible}
+        profile={selectedProfile}
+        onClose={() => setBioModalVisible(false)}
+        onLike={handleBioLike}
+        onPass={handleBioPass}
+      />
+
+      <MatchModal
+        visible={matchModalVisible}
+        matchedProfile={matchedProfile}
+        onSendMessage={handleSendMessage}
+        onKeepSwiping={handleKeepSwiping}
+      />
     </View>
   );
 }
@@ -115,16 +275,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  reelsContainer: {
+    flex: 1,
+    backgroundColor: "#000",
+  },
   loadingText: {
     marginTop: 12,
     color: COLORS.muted,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "700",
-    marginBottom: 20,
-    color: COLORS.primary,
-    alignSelf: "flex-start",
   },
   emptyTitle: {
     fontSize: 22,
@@ -137,22 +294,5 @@ const styles = StyleSheet.create({
     color: COLORS.muted,
     textAlign: "center",
     marginTop: 8,
-  },
-  profileCard: {
-    width: "100%",
-    backgroundColor: "#f7f7f7",
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 14,
-  },
-  profileName: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: COLORS.primary,
-  },
-  profileDetail: {
-    fontSize: 14,
-    color: COLORS.muted,
-    marginTop: 4,
   },
 });
