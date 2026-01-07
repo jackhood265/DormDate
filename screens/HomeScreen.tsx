@@ -77,14 +77,23 @@ export default function HomeScreen() {
 
       const snap = await getDocs(q);
 
+      console.log("📊 Total profiles found:", snap.size);
+      console.log("🙋 Current user ID:", user.uid);
+      console.log("👀 Already seen IDs:", seenIds);
+
       const results: Profile[] = [];
       snap.forEach((d) => {
+        console.log("👤 Checking profile:", d.id, d.data());
         // Filter out current user and already-seen profiles
         if (d.id !== user.uid && !seenIds.includes(d.id)) {
           results.push({ id: d.id, ...d.data() } as Profile);
+          console.log("✅ Added to results");
+        } else {
+          console.log("❌ Filtered out (current user or already seen)");
         }
       });
 
+      console.log("🎯 Final results count:", results.length);
       setProfiles(results);
     } catch (err) {
       console.log("HomeScreen loadProfiles error:", err);
