@@ -94,6 +94,13 @@ export default function HomeScreen() {
       });
 
       console.log("🎯 Final results count:", results.length);
+
+      // Debug alert to see what's happening
+      Alert.alert(
+        "Debug Info",
+        `Total found: ${snap.size}\nCurrent user: ${user.uid.substring(0, 8)}...\nFiltered profiles: ${results.length}\nSeen: ${seenIds.length}`
+      );
+
       setProfiles(results);
     } catch (err) {
       console.log("HomeScreen loadProfiles error:", err);
