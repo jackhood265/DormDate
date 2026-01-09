@@ -85,7 +85,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>DormDate Login</Text>
+      <Text style={styles.title}>🚀 TEST BUILD v2.0 🚀</Text>
 
       <TextInput
         placeholder="Email"
