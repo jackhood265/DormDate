@@ -45,11 +45,15 @@ export default function HomeScreen() {
   const [matchedProfile, setMatchedProfile] = useState<Profile | null>(null);
 
   async function loadProfiles() {
+    // IMMEDIATE test - does this function even run?
+    Alert.alert("TEST", "loadProfiles started!");
+
     try {
       const user = auth.currentUser;
 
       if (!user) {
         console.log("No user logged in — skipping profile load.");
+        Alert.alert("DEBUG", "No user logged in");
         setProfiles([]);
         setLoading(false);
         return;
@@ -61,6 +65,7 @@ export default function HomeScreen() {
 
       if (!currentUserSnap.exists()) {
         console.log("Current user doc not found");
+        Alert.alert("DEBUG", "User doc doesn't exist in Firestore");
         setProfiles([]);
         setLoading(false);
         return;
@@ -102,8 +107,9 @@ export default function HomeScreen() {
       );
 
       setProfiles(results);
-    } catch (err) {
+    } catch (err: any) {
       console.log("HomeScreen loadProfiles error:", err);
+      Alert.alert("ERROR", `Error loading profiles: ${err.message || err}`);
       setProfiles([]);
     } finally {
       setLoading(false);
