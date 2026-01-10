@@ -12,6 +12,10 @@ const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
   return (
     <Tab.Navigator
+      screenOptions={({ route }) => ({
+        // Hide tab bar on Home screen for immersive Reels experience
+        tabBarStyle: route.name === 'Home' ? { display: 'none' } : undefined,
+      })}
       // tabBar={(props) => <CustomTabBar {...props} />} // enable if you have CustomTabBar
     >
       <Tab.Screen name="Home" component={HomeScreen} />
