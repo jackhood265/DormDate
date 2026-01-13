@@ -257,10 +257,22 @@ export default function HomeScreen() {
   if (profiles.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.emptyTitle}>No more profiles nearby</Text>
-        <Text style={styles.emptySubtitle}>
-          Once more Auburn students sign up, they'll appear here.
-        </Text>
+        {/* Top Navigation Icons */}
+        <View style={styles.emptyTopNav}>
+          <Pressable style={styles.emptyNavButton} onPress={handleNavigateToProfile}>
+            <Text style={styles.emptyNavIcon}>👤</Text>
+          </Pressable>
+          <Pressable style={styles.emptyNavButton} onPress={handleNavigateToMessages}>
+            <Text style={styles.emptyNavIcon}>💬</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.emptyContent}>
+          <Text style={styles.emptyTitle}>No more profiles nearby</Text>
+          <Text style={styles.emptySubtitle}>
+            Once more Auburn students sign up, they'll appear here.
+          </Text>
+        </View>
       </View>
     );
   }
@@ -322,5 +334,31 @@ const styles = StyleSheet.create({
     color: COLORS.muted,
     textAlign: "center",
     marginTop: 8,
+  },
+  emptyTopNav: {
+    position: "absolute",
+    top: 50,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    zIndex: 10,
+  },
+  emptyNavButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: COLORS.accent,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyNavIcon: {
+    fontSize: 22,
+  },
+  emptyContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

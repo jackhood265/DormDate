@@ -125,9 +125,9 @@ export default function EditProfileScreen() {
 
       Alert.alert("Success", "Profile updated!");
       navigation.goBack();
-    } catch (err) {
+    } catch (err: any) {
       console.log("Error saving profile:", err);
-      Alert.alert("Error", "Could not save profile. Please try again.");
+      Alert.alert("Error", `Could not save profile: ${err.message || err}. Please check Firebase Storage rules.`);
     } finally {
       setSaving(false);
     }

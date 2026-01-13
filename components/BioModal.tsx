@@ -8,6 +8,8 @@ import {
   ScrollView,
   Image,
   Dimensions,
+  SafeAreaView,
+  StatusBar,
 } from "react-native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -61,8 +63,10 @@ export default function BioModal({
       animationType="slide"
       transparent={false}
       onRequestClose={onClose}
+      statusBarTranslucent={false}
     >
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
         {/* Close Button */}
         <Pressable style={styles.closeButton} onPress={onClose}>
           <Text style={styles.closeButtonText}>✕</Text>
@@ -127,7 +131,7 @@ export default function BioModal({
             <Text style={styles.likeButtonText}>Like 💚</Text>
           </Pressable>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }

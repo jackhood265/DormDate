@@ -33,8 +33,28 @@ export default function AppNavigator() {
 
       {/* Main App */}
       <Stack.Screen name="MainTabs" component={BottomTabs} />
-      <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={({ route }) => ({
+          headerShown: true,
+          title: (route.params as any)?.matchName || "Chat",
+          headerStyle: { backgroundColor: "#0A1D37" },
+          headerTintColor: "#fff",
+          headerTitleStyle: { fontWeight: "600" },
+        })}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
+        options={{
+          headerShown: true,
+          title: "Edit Profile",
+          headerStyle: { backgroundColor: "#0A1D37" },
+          headerTintColor: "#fff",
+          headerTitleStyle: { fontWeight: "600" },
+        }}
+      />
     </Stack.Navigator>
   );
 }
