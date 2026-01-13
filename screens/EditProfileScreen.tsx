@@ -143,16 +143,42 @@ export default function EditProfileScreen() {
       navigation.goBack();
     } catch (err: any) {
       console.error("Error saving profile:", err);
-      console.error("Error code:", err.code);
-      console.error("Error message:", err.message);
-      console.error("Full error:", JSON.stringify(err, null, 2));
 
-      let errorMessage = err.message || err.toString();
-      if (err.code) {
-        errorMessage = `[${err.code}] ${errorMessage}`;
+      // Build comprehensive error details for in-app display
+      let errorDetails = "ERROR DETAILS:\n\n";
+
+      // Basic error info
+      errorDetails += `Code: ${err.code || "none"}\n`;
+      errorDetails += `Message: ${err.message || "none"}\n\n`;
+
+      // Check for Firebase Storage specific error details
+      if (err.serverResponse) {
+        errorDetails += `Server Response: ${err.serverResponse}\n\n`;
       }
 
-      Alert.alert("Error", `Could not save profile: ${errorMessage}`);
+      if (err.customData) {
+        errorDetails += `Custom Data: ${JSON.stringify(err.customData, null, 2)}\n\n`;
+      }
+
+      // Show all error properties
+      errorDetails += "All Error Properties:\n";
+      for (const key in err) {
+        if (err.hasOwnProperty(key)) {
+          const value = err[key];
+          if (typeof value === "object") {
+            errorDetails += `${key}: ${JSON.stringify(value)}\n`;
+          } else {
+            errorDetails += `${key}: ${value}\n`;
+          }
+        }
+      }
+
+      // Show in scrollable alert
+      Alert.alert(
+        "Photo Upload Failed - Debug Info",
+        errorDetails,
+        [{ text: "Copy to Clipboard", onPress: () => console.log(errorDetails) }]
+      );
     } finally {
       setSaving(false);
     }
