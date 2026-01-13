@@ -51,7 +51,6 @@ export default function HomeScreen() {
       const user = auth.currentUser;
 
       if (!user) {
-        console.log("No user logged in — skipping profile load.");
         setProfiles([]);
         setLoading(false);
         return;
@@ -62,7 +61,6 @@ export default function HomeScreen() {
       const currentUserSnap = await getDoc(currentUserDocRef);
 
       if (!currentUserSnap.exists()) {
-        console.log("Current user doc not found");
         setProfiles([]);
         setLoading(false);
         return;
@@ -79,33 +77,17 @@ export default function HomeScreen() {
 
       const snap = await getDocs(q);
 
-      console.log("📊 Total profiles found:", snap.size);
-      console.log("🙋 Current user ID:", user.uid);
-      console.log("👀 Already seen IDs:", seenIds);
-
       const results: Profile[] = [];
       snap.forEach((d) => {
-        console.log("👤 Checking profile:", d.id, d.data());
         // Filter out current user and already-seen profiles
         if (d.id !== user.uid && !seenIds.includes(d.id)) {
           results.push({ id: d.id, ...d.data() } as Profile);
-          console.log("✅ Added to results");
-        } else {
-          console.log("❌ Filtered out (current user or already seen)");
         }
       });
 
-      console.log("🎯 Final results count:", results.length);
-
-      // Debug alert to see what's happening
-      Alert.alert(
-        "Debug Info",
-        `Total found: ${snap.size}\nCurrent user: ${user.uid.substring(0, 8)}...\nFiltered profiles: ${results.length}\nSeen: ${seenIds.length}`
-      );
-
       setProfiles(results);
     } catch (err) {
-      console.log("HomeScreen loadProfiles error:", err);
+      console.error("HomeScreen loadProfiles error:", err);
       setProfiles([]);
     } finally {
       setLoading(false);
