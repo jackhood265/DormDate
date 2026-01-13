@@ -102,11 +102,27 @@ export default function EditProfileScreen() {
 
       // Upload new photo if selected
       if (selectedImage) {
+        console.log("Starting photo upload for user:", user.uid);
+        console.log("Selected image URI:", selectedImage);
+
         const response = await fetch(selectedImage);
+        console.log("Fetch response status:", response.status);
+
         const blob = await response.blob();
-        const storageRef = ref(storage, `profilePhotos/${user.uid}.jpg`);
+        console.log("Blob created, size:", blob.size, "type:", blob.type);
+
+        const storagePath = `profilePhotos/${user.uid}.jpg`;
+        console.log("Storage path:", storagePath);
+
+        const storageRef = ref(storage, storagePath);
+        console.log("Storage ref created:", storageRef.fullPath);
+
+        console.log("Uploading bytes...");
         await uploadBytes(storageRef, blob);
+        console.log("Upload successful, getting download URL...");
+
         newPhotoURL = await getDownloadURL(storageRef);
+        console.log("Download URL obtained:", newPhotoURL);
       }
 
       // Update Firestore
@@ -126,8 +142,17 @@ export default function EditProfileScreen() {
       Alert.alert("Success", "Profile updated!");
       navigation.goBack();
     } catch (err: any) {
-      console.log("Error saving profile:", err);
-      Alert.alert("Error", `Could not save profile: ${err.message || err}. Please check Firebase Storage rules.`);
+      console.error("Error saving profile:", err);
+      console.error("Error code:", err.code);
+      console.error("Error message:", err.message);
+      console.error("Full error:", JSON.stringify(err, null, 2));
+
+      let errorMessage = err.message || err.toString();
+      if (err.code) {
+        errorMessage = `[${err.code}] ${errorMessage}`;
+      }
+
+      Alert.alert("Error", `Could not save profile: ${errorMessage}`);
     } finally {
       setSaving(false);
     }
