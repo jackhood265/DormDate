@@ -33,6 +33,8 @@ interface ReelsCardProps {
   onPassPress: () => void;
   onLikePress: () => void;
   onDoubleTap: () => void;
+  onNavigateToMessages: () => void;
+  onNavigateToProfile: () => void;
 }
 
 export default function ReelsCard({
@@ -41,6 +43,8 @@ export default function ReelsCard({
   onPassPress,
   onLikePress,
   onDoubleTap,
+  onNavigateToMessages,
+  onNavigateToProfile,
 }: ReelsCardProps) {
   const [lastTap, setLastTap] = React.useState<number>(0);
 
@@ -74,6 +78,16 @@ export default function ReelsCard({
         {/* Gradient Overlay for readability */}
         <View style={styles.gradientOverlay} />
       </Pressable>
+
+      {/* Top Navigation Icons */}
+      <View style={styles.topNav}>
+        <Pressable style={styles.navButton} onPress={onNavigateToProfile}>
+          <Text style={styles.navIcon}>👤</Text>
+        </Pressable>
+        <Pressable style={styles.navButton} onPress={onNavigateToMessages}>
+          <Text style={styles.navIcon}>💬</Text>
+        </Pressable>
+      </View>
 
       {/* Profile Info Overlay */}
       <View style={styles.infoOverlay}>
@@ -213,5 +227,26 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "700",
     color: "#fff",
+  },
+  topNav: {
+    position: "absolute",
+    top: 50,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    zIndex: 10,
+  },
+  navButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  navIcon: {
+    fontSize: 22,
   },
 });

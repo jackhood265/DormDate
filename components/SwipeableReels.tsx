@@ -28,6 +28,8 @@ interface SwipeableReelsProps {
   onPass: (profileId: string) => void;
   onShowBio: (profile: Profile) => void;
   onEnd: () => void;
+  onNavigateToMessages: () => void;
+  onNavigateToProfile: () => void;
 }
 
 export default function SwipeableReels({
@@ -36,6 +38,8 @@ export default function SwipeableReels({
   onPass,
   onShowBio,
   onEnd,
+  onNavigateToMessages,
+  onNavigateToProfile,
 }: SwipeableReelsProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const pan = useRef(new Animated.Value(0)).current;
@@ -167,6 +171,8 @@ export default function SwipeableReels({
           onPassPress={handlePass}
           onLikePress={handleLike}
           onDoubleTap={handleDoubleTapLike}
+          onNavigateToMessages={onNavigateToMessages}
+          onNavigateToProfile={onNavigateToProfile}
         />
       </Animated.View>
     </View>

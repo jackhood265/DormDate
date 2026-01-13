@@ -1,6 +1,7 @@
 // screens/HomeScreen.tsx
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase/config";
 import {
   collection,
@@ -37,6 +38,7 @@ interface Profile {
 }
 
 export default function HomeScreen() {
+  const navigation = useNavigation<any>();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [bioModalVisible, setBioModalVisible] = useState(false);
@@ -235,6 +237,14 @@ export default function HomeScreen() {
     setProfiles([]);
   }
 
+  function handleNavigateToMessages() {
+    navigation.navigate("Messages");
+  }
+
+  function handleNavigateToProfile() {
+    navigation.navigate("Profile");
+  }
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -263,6 +273,8 @@ export default function HomeScreen() {
         onPass={handlePass}
         onShowBio={handleShowBio}
         onEnd={handleEndOfProfiles}
+        onNavigateToMessages={handleNavigateToMessages}
+        onNavigateToProfile={handleNavigateToProfile}
       />
 
       <BioModal

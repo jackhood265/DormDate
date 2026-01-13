@@ -15,6 +15,8 @@ export default function BottomTabs() {
       screenOptions={({ route }) => ({
         // Hide tab bar on Home screen for immersive Reels experience
         tabBarStyle: route.name === 'Home' ? { display: 'none' } : undefined,
+        // Hide header on Home screen too
+        headerShown: route.name === 'Home' ? false : true,
       })}
       // tabBar={(props) => <CustomTabBar {...props} />} // enable if you have CustomTabBar
     >
