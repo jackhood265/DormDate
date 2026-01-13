@@ -7,6 +7,7 @@ import {
   Pressable,
   Image,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { auth, db } from "../firebase/config";
@@ -96,8 +97,16 @@ export default function MessagesScreen() {
 
       console.log(`✅ MessagesScreen: Loaded ${matchProfiles.length} match profiles`);
       setMatches(matchProfiles);
+
+      // DEBUG: Show in-app what was loaded
+      Alert.alert(
+        "📬 Messages Loaded (Debug)",
+        `User: ${user.uid.substring(0, 8)}...\n\nMatch IDs found: ${matchIds.length}\nMatch profiles loaded: ${matchProfiles.length}\n\nIDs: ${matchIds.map(id => id.substring(0, 8)).join(", ")}`,
+        [{ text: "OK" }]
+      );
     } catch (err) {
       console.error("❌ MessagesScreen: Error loading matches:", err);
+      Alert.alert("Error Loading Matches", String(err));
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 // screens/HomeScreen.tsx
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, Pressable } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Pressable, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase/config";
 import {
@@ -186,6 +186,13 @@ export default function HomeScreen() {
             { merge: true }
           );
           console.log(`✅ Saved match to other user ${likedUserId}`);
+
+          // DEBUG: Show in-app confirmation
+          Alert.alert(
+            "🎉 Match Created (Debug)",
+            `Match saved to BOTH users:\n\nYour ID: ${user.uid.substring(0, 8)}...\nTheir ID: ${likedUserId.substring(0, 8)}...\n\nBoth should now see each other in Messages tab.`,
+            [{ text: "OK" }]
+          );
 
           // Show match modal
           const matchProfile = profiles.find((p) => p.id === likedUserId);
