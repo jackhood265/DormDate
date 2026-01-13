@@ -1,6 +1,6 @@
 // screens/HomeScreen.tsx
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase/config";
 import {
