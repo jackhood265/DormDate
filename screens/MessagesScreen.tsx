@@ -8,7 +8,7 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { auth, db } from "../firebase/config";
 import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 
@@ -34,9 +34,12 @@ export default function MessagesScreen() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadMatches();
-  }, []);
+  // Reload matches every time the screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadMatches();
+    }, [])
+  );
 
   async function loadMatches() {
     try {
