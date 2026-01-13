@@ -149,6 +149,8 @@ export default function HomeScreen() {
     if (!user) return;
 
     try {
+      console.log(`🔍 Checking for match: ${user.uid} liked ${likedUserId}`);
+
       // Check if the other user has liked us back
       const likedUserRef = doc(db, "users", likedUserId);
       const likedUserSnap = await getDoc(likedUserRef);
@@ -157,17 +159,33 @@ export default function HomeScreen() {
         const likedUserData = likedUserSnap.data();
         const theirLikes = likedUserData?.likes || [];
 
+        console.log(`👀 ${likedUserId}'s likes:`, theirLikes);
+        console.log(`❓ Do they like us back? ${theirLikes.includes(user.uid)}`);
+
         // If they liked us too, it's a match!
         if (theirLikes.includes(user.uid)) {
-          // Save match for both users
-          const currentUserRef = doc(db, "users", user.uid);
-          await updateDoc(currentUserRef, {
-            matches: arrayUnion(likedUserId),
-          });
+          console.log(`🎉 MATCH DETECTED! Saving match for both users...`);
 
-          await updateDoc(likedUserRef, {
-            matches: arrayUnion(user.uid),
-          });
+          // Save match for current user (the one who just liked)
+          const currentUserRef = doc(db, "users", user.uid);
+          await setDoc(
+            currentUserRef,
+            {
+              matches: arrayUnion(likedUserId),
+            },
+            { merge: true }
+          );
+          console.log(`✅ Saved match to current user ${user.uid}`);
+
+          // Save match for other user (the one who liked first)
+          await setDoc(
+            likedUserRef,
+            {
+              matches: arrayUnion(user.uid),
+            },
+            { merge: true }
+          );
+          console.log(`✅ Saved match to other user ${likedUserId}`);
 
           // Show match modal
           const matchProfile = profiles.find((p) => p.id === likedUserId);
@@ -175,10 +193,12 @@ export default function HomeScreen() {
             setMatchedProfile(matchProfile);
             setMatchModalVisible(true);
           }
+        } else {
+          console.log(`❌ No match - they haven't liked us back yet`);
         }
       }
     } catch (err) {
-      console.log("Error checking for match:", err);
+      console.error("❌ Error checking for match:", err);
     }
   }
 

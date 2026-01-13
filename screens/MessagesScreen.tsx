@@ -45,15 +45,19 @@ export default function MessagesScreen() {
     try {
       const user = auth.currentUser;
       if (!user) {
+        console.log("📭 MessagesScreen: No user logged in");
         setLoading(false);
         return;
       }
+
+      console.log(`📬 MessagesScreen: Loading matches for user ${user.uid}`);
 
       // Get current user's matches
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
+        console.log("📭 MessagesScreen: User document doesn't exist");
         setLoading(false);
         return;
       }
@@ -61,7 +65,10 @@ export default function MessagesScreen() {
       const userData = userSnap.data();
       const matchIds = userData?.matches || [];
 
+      console.log(`📊 MessagesScreen: Found ${matchIds.length} match IDs:`, matchIds);
+
       if (matchIds.length === 0) {
+        console.log("📭 MessagesScreen: No matches found");
         setLoading(false);
         return;
       }
@@ -69,6 +76,7 @@ export default function MessagesScreen() {
       // Fetch each match's profile
       const matchProfiles: Match[] = [];
       for (const matchId of matchIds) {
+        console.log(`👤 MessagesScreen: Fetching profile for ${matchId}`);
         const matchRef = doc(db, "users", matchId);
         const matchSnap = await getDoc(matchRef);
 
@@ -82,12 +90,14 @@ export default function MessagesScreen() {
             lastMessage: "Start chatting!", // Placeholder for now
             lastMessageTime: Date.now(),
           });
+          console.log(`✅ MessagesScreen: Added ${matchData.firstName} to matches`);
         }
       }
 
+      console.log(`✅ MessagesScreen: Loaded ${matchProfiles.length} match profiles`);
       setMatches(matchProfiles);
     } catch (err) {
-      console.log("Error loading matches:", err);
+      console.error("❌ MessagesScreen: Error loading matches:", err);
     } finally {
       setLoading(false);
     }
