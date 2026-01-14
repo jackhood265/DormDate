@@ -68,6 +68,13 @@ export default function MessagesScreen() {
 
       console.log(`📊 MessagesScreen: Found ${matchIds.length} match IDs:`, matchIds);
 
+      // DEBUG: ALWAYS show this alert to see what's in the database
+      Alert.alert(
+        "📬 Messages Debug (ALWAYS SHOWS)",
+        `User: ${user.uid.substring(0, 8)}...\n\nMatch IDs found: ${matchIds.length}\n\nIDs: ${matchIds.length > 0 ? matchIds.map((id: string) => id.substring(0, 8)).join(", ") : "NONE"}`,
+        [{ text: "OK" }]
+      );
+
       if (matchIds.length === 0) {
         console.log("📭 MessagesScreen: No matches found");
         setLoading(false);
@@ -97,13 +104,6 @@ export default function MessagesScreen() {
 
       console.log(`✅ MessagesScreen: Loaded ${matchProfiles.length} match profiles`);
       setMatches(matchProfiles);
-
-      // DEBUG: Show in-app what was loaded
-      Alert.alert(
-        "📬 Messages Loaded (Debug)",
-        `User: ${user.uid.substring(0, 8)}...\n\nMatch IDs found: ${matchIds.length}\nMatch profiles loaded: ${matchProfiles.length}\n\nIDs: ${matchIds.map(id => id.substring(0, 8)).join(", ")}`,
-        [{ text: "OK" }]
-      );
     } catch (err) {
       console.error("❌ MessagesScreen: Error loading matches:", err);
       Alert.alert("Error Loading Matches", String(err));
